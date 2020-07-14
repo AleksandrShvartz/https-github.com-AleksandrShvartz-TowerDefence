@@ -37,13 +37,14 @@ MyView::MyView()
 	mediaOfScream->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\414209__jacksonacademyashmore__death.wav")));
 	mediaOfShot->setVolume(50);
 	mediaOfHit = new QMediaPlayer;
-	mediaOfHit->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\135936__bradwesson__collectcoin.wav")));
+	mediaOfHit->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\107789__leviclaassen__hit-002.wav")));
 	mediaOfEnd = new QMediaPlayer;
 	mediaOfEnd->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\253886__themusicalnomad__negative-beeps.wav")));
 	mediaOfDeath = new QMediaPlayer;
-	mediaOfDeath->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\107789__leviclaassen__hit-002.wav")));
+	mediaOfDeath->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\135936__bradwesson__collectcoin.wav")));
 	mediaOfCreate = new QMediaPlayer;
 	mediaOfCreate->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\195568__jacobalcook__creature-roar-1.wav")));
+   
 }		  
 
 void MyView::startGame()
@@ -76,24 +77,31 @@ void MyView::startGame()
 	arrows[arrows.size() - 1]->setConstAngle(bowAngle);
 
 	val = new ValuesOfGame;
-	val->setPar(0, 0, 0, heathOfTower,/**/0);
-	val->setPos(widthOfWindow * 3 / 4., 0);
+	val->setPar(0, 0, 0, 0,/**/0);
+	val->setPos(widthOfWindow * 3 / 8., 0);
 	scene.addItem(val);
+
 	update();
 }
 
 void MyView::pauseGame()
 {
-	if (!onPause)
+	
+	if (!onPause) {
 		timer2.stop();
-	else timer2.start(3000);
-	onPause = !onPause;
 
+	}
+	else {
+		timer2.start(3000);
+	}
+	onPause = !onPause;
+	val->pauseTime(onPause);
 }
 
 void MyView::endOfTheGame()
 {
 	if (gameStarted) {
+		val->setNewRecords();
 		while (arrows.size() > 0) {
 			int i = arrows.size() - 1;
 			scene.removeItem(arrows[i]);
@@ -109,6 +117,7 @@ void MyView::endOfTheGame()
 		scene.removeItem(&btnPause);
 		scene.removeItem(&tower);
 		scene.removeItem(&bow);
+		scene.removeItem(val);
 		delete val;
 		timer2.stop();
 		timer.stop();
@@ -162,7 +171,7 @@ void MyView::keyPressEvent(QKeyEvent* event)
 				}
 				mediaOfShot->play();
 				reload();
-				qDebug() << "fly" << arrows[arrows.size() - 1]->getAngle();
+				//qDebug() << "fly" << arrows[arrows.size() - 1]->getAngle();
 			}
 		}
 	}
@@ -213,7 +222,7 @@ void MyView::refreshTime()
 				int yyy = arrows[i]->getCoords().y();
 				xxx += speedOfArrow * qCos(arrows[i]->getConstAngle());
 				yyy -= speedOfArrow * qSin(arrows[i]->getConstAngle());
-				qDebug() << xxx << " " << yyy << " " << arrows[i]->getConstAngle() / M_PI;
+			//	qDebug() << xxx << " " << yyy << " " << arrows[i]->getConstAngle() / M_PI;
 				if (xxx >= 0 && xxx <= widthOfWindow && yyy >= 0 && yyy <= heightOfWindow) {
 					arrows[i]->setPos(xxx, yyy);
 					arrows[i]->setCoords(QPointF(xxx, yyy));
@@ -233,9 +242,7 @@ void MyView::refreshTime()
 			vragi[i]->setPos(QPointF(vragi[i]->getCoords().x() + speedOfEnomy * qCos(vragi[i]->getAngl()),
 				vragi[i]->getCoords().y() - speedOfEnomy * qSin(vragi[i]->getAngl())));
 			if (vragi[i]->collidesWithItem(&tower)) {
-				tower.setHealth(tower.getHealth()-damageOfEnomy);
-				
-				
+				tower.setHealth(tower.getHealth()-damageOfEnomy);				
 				scene.removeItem(&*vragi[i]);
 				delete[] 	vragi[i];
 				vragi.removeAt(i);
@@ -260,6 +267,7 @@ void MyView::refreshTime()
 					
 					if (vragi[i]->getHealth() <= 0) {
 						mediaOfDeath->play();
+						val->setPoints(val->getPoints()+1);
 						scene.removeItem(&*vragi[i]);
 						delete[] 	vragi[i];
 						vragi.removeAt(i);
@@ -289,14 +297,14 @@ void MyView::createEnomy()
 		else
 			xx = widthOfWindow - widthOfEnomy;
 		yy = Random::get(0, heightOfWindow - heigthOfEnomy);
-		qDebug() << xx << " " << yy;
+	//	qDebug() << xx << " " << yy;
 		
 		(vragi[vragi.size() - 1])->setPos(xx, yy);
-		QPointF center(widthOfWindow / 2., heightOfWindow/2.);
+		QPointF center(widthOfWindow / 2., heightOfWindow*7/8.);
 		qreal ang;
 		if(yy>=center.y())
-		ang= qAcos((center.x() - xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
-		else ang = -qAcos((center.x() - xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
+		ang= qAcos((center.x() + xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
+		else ang = -qAcos((center.x() + xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
 		(vragi[vragi.size() - 1])->setCoords(QPointF(xx, yy));
 		(vragi[vragi.size() - 1])->setAng(ang);
 		scene.addItem((vragi[vragi.size() - 1]));

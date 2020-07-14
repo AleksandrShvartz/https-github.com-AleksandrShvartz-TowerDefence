@@ -1,8 +1,10 @@
 #pragma once
 #include "Random.h"
-#include "vld.h"
+//#include "vld.h"
 #include <QMediaPlayer>
 //#include <QMediaPlaylist>
+#include <QFile> 
+#include <QTextStream> 
 #include <QDir>
 #include <QUrl>
 #include <QSound>
@@ -34,7 +36,7 @@ static qreal shirinaStvola = 5;
 static int heightOfBorrow = 20;
 static int widthOfBorrow = 20;
 static int damageOfBorrow = 10;
-static int heightOfValues= 40;
+static int heightOfValues= 70;
 static int widthOfValues = 300;
 static int speedOfArrow = 10;
 static int heigthOfEnomy = 50;

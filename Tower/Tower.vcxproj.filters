@@ -105,4 +105,7 @@
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="records.txt" />
+  </ItemGroup>
 </Project>

@@ -60,7 +60,7 @@ void MyButton::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
 void MyButton::hoverEvent(qreal,bool b)
 {
     if (path == "play") {
-        qDebug() << "playHover";
+      //  qDebug() << "playHover";
         hover = b;
         update();
     }

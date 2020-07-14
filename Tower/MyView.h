@@ -38,6 +38,7 @@ private:
     CrossBow bow;
     MyButton btnPause;
     MyButton btnPlay;
+    QString record;
     QVector<Arrow*> arrows;
     bool gameStarted;
     bool onPause;

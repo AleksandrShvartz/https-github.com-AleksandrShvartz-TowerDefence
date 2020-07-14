@@ -6,7 +6,12 @@ class ValuesOfGame :
 {
     Q_OBJECT
 public:
-    void setPar(int s,int m,int  h,int hel,QString);
+    void setPar(int s,int m,int  h,int poi,QString);
+    void setPoints(int poi);
+    void setRecords();
+    void setNewRecords();
+    int getPoints();
+    void pauseTime(bool);
     //задаем область для перерисовки
     QRectF boundingRect() const override;
     //рисуем
@@ -14,10 +19,10 @@ public:
  private slots:
     void refreshValues();
 private:
-    int timeS;
-    int timeM;
-    int timeH;
-    int health;
+    int timeS,recTimeS;
+    int timeM,recTimeM;
+    int timeH,recTimeH;
+    int points,recPoints;
     QString path;
     QTimer time;
 };

@@ -303,8 +303,8 @@ void MyView::createEnomy()
 		QPointF center(widthOfWindow / 2., heightOfWindow*7/8.);
 		qreal ang;
 		if(yy>=center.y())
-		ang= qAcos((center.x() + xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
-		else ang = -qAcos((center.x() + xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
+		ang= qAcos((center.x() - xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
+		else ang = -qAcos((center.x() - xx) / qSqrt((center.x() - xx) * (center.x() - xx) + (center.y() - yy) * (center.y() - yy)));
 		(vragi[vragi.size() - 1])->setCoords(QPointF(xx, yy));
 		(vragi[vragi.size() - 1])->setAng(ang);
 		scene.addItem((vragi[vragi.size() - 1]));

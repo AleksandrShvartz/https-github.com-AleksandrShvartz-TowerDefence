@@ -11,8 +11,9 @@ void MyButton::setPar(int a, int b, QString s)
 }
 
 QRectF MyButton::boundingRect() const
-{
-    return QRectF(0, 0, w, h);
+{        if(path=="pause")
+    return QRectF(-w, 0, w*2, h*2);
+else   return QRectF(0, 0, w, h );
 }
 
 void MyButton::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -28,8 +29,13 @@ void MyButton::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
            
             pen.setColor(QColor(255, 215, 0));
             painter->setPen(pen);
+            for(int i=1;i<30;i++)  
+                if(i%2)
+            painter->drawLine(QPointF(w / 2., h / 2.), QPointF(w*qCos(2*M_PI*i/30.)+ w / 2.,  h * qSin(2 * M_PI*i/30.)+h / 2.));
+                else    painter->drawLine(QPointF(w / 2., h / 2.), QPointF(w *1.5* qCos(2 * M_PI * i / 30.) + w / 2., h *1.5* qSin(2 * M_PI * i / 30.) + h / 2.));
             painter->setBrush(QBrush(Qt::yellow, Qt::SolidPattern));
             painter->drawEllipse(QRectF(0, 0, w, h));
+           
             if (pauseClicked)
                 painter->setBrush((QColor(128, 128, 128)));
             else

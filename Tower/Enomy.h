@@ -24,6 +24,6 @@ private:
     int damage=damageOfEnomy;
     int health=healthOfEnomy;
     int speed=speedOfEnomy;
-    int angleOfEnomy;
+    qreal angleOfEnomy=0;
 };
 

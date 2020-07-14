@@ -1,8 +1,10 @@
 #pragma once
 #include "Random.h"
 #include "vld.h"
-//#include <QMediaPlayer>
+#include <QMediaPlayer>
 //#include <QMediaPlaylist>
+#include <QDir>
+#include <QUrl>
 #include <QSound>
 #include <QGraphicsItem>
 #include <QRandomGenerator>
@@ -22,7 +24,7 @@ static int heightOfBtnPause = 105;
 static int widthOfBtnPause = 115;
 static int heightOfBtnPlay = 150;
 static int widthOfBtnPlay =200;
-static int heathOfTower = 100;
+static int heathOfTower = 300;
 static int heightOfTower = 600;
 static int widthOfTower = 200;
 static int lengthOfBow = 100;
@@ -41,5 +43,6 @@ static int damageOfEnomy = 100;
 static int healthOfEnomy = 20;
 static int speedOfEnomy = 5;
 static int capasityOfQuiver = 7;
+//static qint64 durationOfShot=0;
 
 

@@ -31,7 +31,20 @@ MyView::MyView()
 	connect(&btnPlay, &MyButton::btnMouseReleaseEvent, this, &MyView::btnPlayClicked);
 	connect(&timer2, &QTimer::timeout, this, &MyView::createEnomy);
 	connect(&timer, &QTimer::timeout, this, &MyView::refreshTime);
-}
+	mediaOfShot	 = new QMediaPlayer;
+	mediaOfShot->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\16557_1460656892.mp3")));
+	mediaOfScream = new QMediaPlayer;
+	mediaOfScream->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\414209__jacksonacademyashmore__death.wav")));
+	mediaOfShot->setVolume(50);
+	mediaOfHit = new QMediaPlayer;
+	mediaOfHit->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\135936__bradwesson__collectcoin.wav")));
+	mediaOfEnd = new QMediaPlayer;
+	mediaOfEnd->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\253886__themusicalnomad__negative-beeps.wav")));
+	mediaOfDeath = new QMediaPlayer;
+	mediaOfDeath->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\107789__leviclaassen__hit-002.wav")));
+	mediaOfCreate = new QMediaPlayer;
+	mediaOfCreate->setMedia(QUrl::fromLocalFile(QDir::toNativeSeparators("C:\\Users\\Vladimir_Shvartc\\Downloads\\195568__jacobalcook__creature-roar-1.wav")));
+}		  
 
 void MyView::startGame()
 {
@@ -62,10 +75,10 @@ void MyView::startGame()
 	bowAngle = M_PI / 2.;
 	arrows[arrows.size() - 1]->setConstAngle(bowAngle);
 
-
-	val.setPar(0, 0, 0, heathOfTower,/**/0);
-	val.setPos(widthOfWindow * 3 / 4., 0);
-	scene.addItem(&val);//что-то с памятью?! при закрытии приложения
+	val = new ValuesOfGame;
+	val->setPar(0, 0, 0, heathOfTower,/**/0);
+	val->setPos(widthOfWindow * 3 / 4., 0);
+	scene.addItem(val);
 	update();
 }
 
@@ -80,26 +93,28 @@ void MyView::pauseGame()
 
 void MyView::endOfTheGame()
 {
-	
-	while (arrows.size() > 0) {
-		int i = arrows.size() - 1;
-		scene.removeItem(arrows[i]);
-		delete[] arrows[i];
-		arrows.removeAt(i);
+	if (gameStarted) {
+		while (arrows.size() > 0) {
+			int i = arrows.size() - 1;
+			scene.removeItem(arrows[i]);
+			delete[] arrows[i];
+			arrows.removeAt(i);
+		}
+		while (vragi.size() > 0) {
+			int i = vragi.size() - 1;
+			scene.removeItem(vragi[i]);
+			delete[] vragi[i];
+			vragi.removeAt(i);
+		}
+		scene.removeItem(&btnPause);
+		scene.removeItem(&tower);
+		scene.removeItem(&bow);
+		delete val;
+		timer2.stop();
+		timer.stop();
+		gameStarted = false;
+		initElements();
 	}
-	while (vragi.size() > 0) {
-		int i = vragi.size() - 1;
-		scene.removeItem(vragi[i]);
-		delete[] vragi[i];
-		vragi.removeAt(i);
-	}
-	scene.removeItem(&btnPause);
-	scene.removeItem(&tower);
-	scene.removeItem(&bow);
-	timer2.stop();
-	timer.stop();
-	gameStarted = false;
-	initElements();
 	//startGame();
 }
 
@@ -137,18 +152,31 @@ void MyView::mouseMoveEvent(QMouseEvent* event)
 
 void MyView::keyPressEvent(QKeyEvent* event)
 {
-	if (!onPause) {
+	if (!onPause&&gameStarted) {
 		if (event->key() == Qt::Key_Space) {
 			if (arrows.size() <= capasityOfQuiver) {
 				arrows[arrows.size() - 1]->setFly(true);
 				arrows[arrows.size() - 1]->setConstAngle(arrows[arrows.size() - 1]->getAngle());
-
+				if (mediaOfShot->state() == QMediaPlayer::PlayingState) {
+					mediaOfShot->stop();
+				}
+				mediaOfShot->play();
 				reload();
-			//QSound::play("C:\\Users\\Vladimir_Shvartc\\Downloads\\zvuk-strely2.mp3");
 				qDebug() << "fly" << arrows[arrows.size() - 1]->getAngle();
 			}
 		}
 	}
+}
+
+MyView::~MyView()
+{
+	endOfTheGame();
+	delete mediaOfCreate;
+	delete mediaOfDeath;
+	delete mediaOfEnd;
+	delete mediaOfHit;
+	delete mediaOfShot;
+	delete mediaOfScream;
 }
 
 void MyView::initElements()
@@ -206,32 +234,38 @@ void MyView::refreshTime()
 				vragi[i]->getCoords().y() - speedOfEnomy * qSin(vragi[i]->getAngl())));
 			if (vragi[i]->collidesWithItem(&tower)) {
 				tower.setHealth(tower.getHealth()-damageOfEnomy);
-
+				
 				
 				scene.removeItem(&*vragi[i]);
 				delete[] 	vragi[i];
 				vragi.removeAt(i);
 				i--;
 				if (tower.getHealth() <= 0) {
+					mediaOfEnd->play();
 					endOfTheGame();
 					qDebug() << "Game Over";
-				}
+				} else mediaOfScream->play();
 				break;
+				update();
 			}
 			for (int j = 0; j < arrows.size(); j++)
 				if (vragi[i]->collidesWithItem(arrows[j])) {
+				//	if(arrows[j]->getFly())
 					scene.removeItem(arrows[j]);
+					
 					delete[]  arrows[j];
 					arrows.removeAt(j);
 					j--;
 					vragi[i]->setHealth(vragi[i]->getHealth()-damageOfBorrow);
+					
 					if (vragi[i]->getHealth() <= 0) {
+						mediaOfDeath->play();
 						scene.removeItem(&*vragi[i]);
 						delete[] 	vragi[i];
 						vragi.removeAt(i);
 						i--;
 						break;
-					}
+					}	else mediaOfHit->play();
 				}
 
 		}
@@ -244,6 +278,7 @@ void MyView::refreshTime()
 
 void MyView::createEnomy()
 {
+	mediaOfCreate->play();
 	qDebug() << "createEnomy";
 	int storona =Random::get(1,2);	
 //if (countOfEnomy+1 <= 10) {

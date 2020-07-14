@@ -19,6 +19,7 @@ public:
     void endOfTheGame();
     void mouseMoveEvent(QMouseEvent*) override;
    void keyPressEvent(QKeyEvent*) override;
+   ~MyView();
 signals:
    // void sendTorefreshValues();
    void mouseMoved(qreal, bool);
@@ -31,7 +32,7 @@ private slots:
     void refreshTime();
     void createEnomy();
 private:
-    ValuesOfGame val;
+    ValuesOfGame* val;
     QGraphicsScene scene;
     Castle tower;
     CrossBow bow;
@@ -40,6 +41,7 @@ private:
     QVector<Arrow*> arrows;
     bool gameStarted;
     bool onPause;
+    QMediaPlayer* mediaOfShot,*mediaOfScream,*mediaOfHit,*mediaOfEnd,*mediaOfDeath,*mediaOfCreate;
 //    int arrowX;
  //   int arrowY;
  //   qreal arrowAngle;
@@ -47,7 +49,7 @@ private:
     qreal bowAngle;
     int bowX;
     int bowY;
-    QTimer timer,timer2;
+    QTimer timer,timer2,timer3;
   //  Enomy vragi[10];
     QVector<Enomy*>vragi;
   //  int countOfEnomy;

@@ -27,6 +27,32 @@ void Castle::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QW
 		painter->drawLine(w * 11 / 12., h * 2 / 7., w * 11 / 12., h*3 / 14.);
 		painter->setBrush(Qt::red);
 		painter->drawRect(w * 11 / 12., h*3 / 14.,w/12.,h/28.);
+		pen.setColor(Qt::black);
+		painter->setPen(pen);
+		painter->setBrush(QColor(139, 69, 19));
+		painter->drawRect(w / 5., h * 2. / 3., w * 3 / 5., h / 20.);
+		
+		switch (getHealth())
+		{
+			case 300:  {
+				painter->setBrush(Qt::red);
+				painter->drawRect(w / 5., h * 2. / 3., w * 3 / 5., h / 20.);
+				break;
+			}
+			case 200: {
+				painter->setBrush(Qt::red);
+				painter->drawRect(w / 5., h * 2. / 3., w * 2 / 5., h / 20.);
+				break;
+			}
+			case 100: {
+				painter->setBrush(Qt::red);
+				painter->drawRect(w / 5., h * 2. / 3., w / 5., h / 20.);
+				break;
+			}
+		default:
+			break;
+		}
+	
 
 	}
 	else {
